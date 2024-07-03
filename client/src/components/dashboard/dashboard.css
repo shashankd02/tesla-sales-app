@@ -2,6 +2,47 @@
     padding: 50px 50px;
 }
 
+.header-row {
+    background: lightgray;
+}
+
+.header-row>div,
+.body-row>div {
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.heading {
+    margin: 20px 0;
+}
+
+.body-row {
+    background: whitesmoke;
+    align-items: center;
+}
+
+.body-row.display {
+    background: lightyellow;
+}
+.header-row.total {
+    background: #b4fdb3;
+}
+
+.body-row>div {
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.form-check>.form-check-input {
+    border: 2px solid lightgray;
+}
+
+.subheading {
+    display: inline-block;
+    margin: 0 10px;
+    font-weight: 600;
+}
+
 .action-section {
     text-align: left;
     margin: 20px 0;

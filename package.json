@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Full-stack application with React client and Express server",
   "scripts": {
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
     "client": "npm start --prefix client",
     "server": "npm start --prefix server",
     "dev": "concurrently \"npm run client\" \"npm run server\"",
@@ -10,10 +11,11 @@
     "build:client": "npm run build --prefix client",
     "build:server": "npm run build --prefix server"
   },
-  "dependencies": {
-    "express": "^4.17.1"
-  },
   "devDependencies": {
     "concurrently": "^6.2.0"
+  },
+  "engines": {
+    "node": ">=20.15.0",
+    "npm": ">=10.7.0"
   }
 }

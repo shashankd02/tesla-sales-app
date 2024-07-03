@@ -10,6 +10,8 @@ export function Dashboard() {
   const [selectedList, setSelectedList] = useState<any[]>([]);
   const [showBatteryDetails, setShowBatteryDetails] = useState<boolean>(false);
   const [showError, setShowError] = useState<boolean>(false);
+  const [totalBatteryQuantity, setTotalBatteryQuantity] = useState<any>();
+  const [totalCost, setTotalCost] = useState<any>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,46 +35,6 @@ export function Dashboard() {
     setSelectedList([]);
     setBatteryData(JSON.parse(JSON.stringify(backUpBatteryData)));
     resetForm();
-  };
-
-  const showDetails = () => {
-    // e.preventDefault();
-    // setShowError(false);
-    // setShowBatteryDetails(true);
-    // setSelectedList([]);
-
-    // reset();
-
-    const totalQuantity = selectedList.reduce((acc, curr) => {
-      acc += curr.quantity;
-      return acc;
-    }, 0);
-    const transformersRequired =
-      totalQuantity >= 4 ? Math.floor(totalQuantity / 4) : 0;
-    const currentTransformers =
-      selectedList.find(
-        (item) => item.id === batteryData[batteryData.length - 1].id
-      )?.quantity || 0;
-    let data = [...selectedList];
-    if (transformersRequired && !currentTransformers) {
-      const transformer = batteryData[batteryData.length - 1];
-      transformer.quantity = transformersRequired;
-      data.push(transformer);
-    } else if (data.length) {
-      data[data.length - 1].quantity += transformersRequired;
-    }
-    setSelectedList([...data]);
-
-    const totalWidth = selectedList.reduce((acc, curr) => {
-      acc += curr.quantity * curr.landSize.width;
-      return acc;
-    }, 0);
-    if (totalWidth > 100) {
-      setSelectedList([]);
-      setShowError(true);
-      setShowBatteryDetails(false);
-    }
-    // resetForm();
   };
 
   const onBatterySelect = (event: any, selectedBattery: any) => {
@@ -130,6 +92,22 @@ export function Dashboard() {
     }
     setSelectedList([...data]);
 
+    const { quantity, cost } = data.reduce((acc, curr) => {
+      if (acc.quantity) {
+        acc.quantity += curr.quantity;
+      } else {
+        acc.quantity = curr.quantity;
+      }
+      if (acc.cost) {
+        acc.cost += +curr.cost.value;
+      } else {
+        acc.cost = +curr.cost.value;
+      }
+      return acc;
+    }, {});
+    setTotalBatteryQuantity(quantity);
+    setTotalCost(cost);
+
     const totalWidth = selectedList.reduce((acc, curr) => {
       if (curr.deviceName !== "Transformer") {
         acc += curr.quantity * curr.landSize.width;
@@ -147,6 +125,13 @@ export function Dashboard() {
     return new Array(quantity).fill("1");
   };
 
+  const formatCurrency = (value: any, locale = "en-US", currency = "USD") => {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: currency,
+    }).format(value);
+  };
+
   return (
     <div className="dashboard-container">
       <div className="heading text-center">
@@ -154,32 +139,32 @@ export function Dashboard() {
       </div>
       <div className="selection-section">
         <form>
-          <div className="row">
+          <div className="row header-row">
             <div className="col-sm-1">
-              <h5>#</h5>
+              <h6>#</h6>
+            </div>
+            <div className="col-sm-3">
+              <h6>Battery</h6>
             </div>
             <div className="col-sm-2">
-              <h5>Battery</h5>
-            </div>
-            <div className="col-sm-2">
-              <h5>Land Size</h5>
-            </div>
-            <div className="col-sm-2">
-              <h5>Energy</h5>
-            </div>
-            <div className="col-sm-2">
-              <h5>Cost</h5>
-            </div>
-            <div className="col-sm-2">
-              <h5>Release Year</h5>
+              <h6>Land Size</h6>
             </div>
             <div className="col-sm-1">
-              <h5>Quantity</h5>
+              <h6>Energy</h6>
+            </div>
+            <div className="col-sm-2">
+              <h6>Cost</h6>
+            </div>
+            <div className="col-sm-2">
+              <h6>Release Year</h6>
+            </div>
+            <div className="col-sm-1">
+              <h6>Quantity</h6>
             </div>
           </div>
           {batteryData &&
             batteryData.map((item, index) => (
-              <div className="row" key={item.id}>
+              <div className="row body-row" key={item.id}>
                 <div className="col-sm-1">
                   <div className="flex">
                     <div className="form-check flex-item" key={item.id}>
@@ -193,17 +178,23 @@ export function Dashboard() {
                     </div>
                   </div>
                 </div>
-                <div className="col-sm-2">{item.deviceName}</div>
+                <div className="col-sm-3">
+                  <img
+                    className="img-thumbnail"
+                    src={"./" + item.imageName}
+                    width={70}
+                  />
+                  <span className="subheading">{item.deviceName}</span>
+                </div>
                 <div className="col-sm-2">
                   {item.landSize.width} x {item.landSize.depth}{" "}
                   {item.landSize.unit}
                 </div>
-                <div className="col-sm-2">
+                <div className="col-sm-1">
                   {item.energy.value} {item.energy.unit}
                 </div>
                 <div className="col-sm-2">
-                  {item.cost.unit}
-                  {item.cost.value}
+                  {formatCurrency(item.cost.value)}
                 </div>
                 <div className="col-sm-2">{item.releaseDate || "-"}</div>
                 <div className="col-sm-1">
@@ -245,12 +236,15 @@ export function Dashboard() {
         </div>
       )}
       {!showError && showBatteryDetails && selectedList.length > 0 && (
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="alert alert-info" role="alert">
-              For every 4 industrial batteries, 1 transformer is needed
-            </div>
+        <div>
+          <h3 className="text-center">Battery Information</h3>
+          <div className="alert alert-info" role="alert">
+            For every 4 industrial batteries, 1 transformer is needed
           </div>
+        </div>
+      )}
+      {!showError && showBatteryDetails && selectedList.length > 0 && (
+        <div className="row header-row">
           <div className="col-sm-1">
             <h5>#</h5>
           </div>
@@ -272,20 +266,39 @@ export function Dashboard() {
         showBatteryDetails &&
         selectedList.length > 0 &&
         selectedList.map((item, index) => (
-          <div className="row" key={item.id + "-display"}>
+          <div className="row body-row display" key={item.id + "-display"}>
             <div className="col-sm-1">{index + 1}</div>
-            <div className="col-sm-4">{item.deviceName}</div>
+            <div className="col-sm-4">
+              <img
+                className="img-thumbnail"
+                src={"./" + item.imageName}
+                width={100}
+              />
+              <span className="subheading">{item.deviceName}</span>
+            </div>
             <div className="col-sm-2">
-              {item.cost.unit}
-              {item.cost.value}
+              {formatCurrency(item.cost.value)}
             </div>
             <div className="col-sm-2">{item.quantity}</div>
             <div className="col-sm-3">
-              {item.cost.unit}
-              {item.cost.value * item.quantity}
+              {formatCurrency(item.cost.value * item.quantity)}
             </div>
           </div>
         ))}
+
+      {!showError && showBatteryDetails && (
+        <div className="row header-row total">
+          <div className="col-sm-4 offset-sm-1">
+            <h4 className="text-center">Total</h4>
+          </div>
+          <div className="col-sm-2 offset-sm-2">
+            <h5>{totalBatteryQuantity}</h5>
+          </div>
+          <div className="col-sm-2">
+            <h5>{formatCurrency(totalCost)}</h5>
+          </div>
+        </div>
+      )}
 
       {!showError && showBatteryDetails && (
         <div className="layout">
@@ -299,7 +312,9 @@ export function Dashboard() {
                   <div
                     className={"layout-item layout-item-" + battery.id}
                     key={index + "-layout-item"}
-                  >{battery.deviceName}</div>
+                  >
+                    {battery.deviceName}
+                  </div>
                 ))}
               </div>
             ))}
