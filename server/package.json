@@ -1,0 +1,24 @@
+{
+  "name": "tesla-server",
+  "version": "1.0.0",
+  "description": "Server for application",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "build": "tsc && npm run copy-data",
+    "copy-data": "cp ./src/utils/data/data.json ./dist/data.json",
+    "dev": "nodemon src/server.ts"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.11",
+    "@types/node": "^14.14.37",
+    "nodemon": "^2.0.12",
+    "path": "^0.12.7",
+    "typescript": "^4.3.5"
+  }
+}

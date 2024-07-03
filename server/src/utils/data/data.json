@@ -1,0 +1,97 @@
+[
+  {
+    "id": 101,
+    "deviceName": "Megapack 2XL",
+    "landSize": {
+      "width": 40,
+      "depth": 10,
+      "unit": "FT"
+    },
+    "energy": {
+      "value": 4,
+      "unit": "MWh"
+    },
+    "cost": {
+      "value": "120000",
+      "unit": "$"
+    },
+    "quantity": 1,
+    "releaseDate": 2022
+  },
+  {
+    "id": 102,
+    "deviceName": "Megapack 2",
+    "landSize": {
+      "width": 30,
+      "depth": 10,
+      "unit": "FT"
+    },
+    "energy": {
+      "value": 3,
+      "unit": "MWh"
+    },
+    "cost": {
+      "value": "80000",
+      "unit": "$"
+    },
+    "quantity": 1,
+    "releaseDate": 2021
+  },
+  {
+    "id": 103,
+    "deviceName": "Megapack",
+    "landSize": {
+      "width": 30,
+      "depth": 10,
+      "unit": "FT"
+    },
+    "energy": {
+      "value": 2,
+      "unit": "MWh"
+    },
+    "cost": {
+      "value": "50000",
+      "unit": "$"
+    },
+    "quantity": 1,
+    "releaseDate": 2005
+  },
+  {
+    "id": 104,
+    "deviceName": "Powerpack",
+    "landSize": {
+      "width": 10,
+      "depth": 10,
+      "unit": "FT"
+    },
+    "energy": {
+      "value": 1,
+      "unit": "MWh"
+    },
+    "cost": {
+      "value": "20000",
+      "unit": "$"
+    },
+    "quantity": 1,
+    "releaseDate": 2000
+  },
+  {
+    "id": 105,
+    "deviceName": "Transformer",
+    "landSize": {
+      "width": 10,
+      "depth": 10,
+      "unit": "FT"
+    },
+    "energy": {
+      "value": -0.25,
+      "unit": "MWh"
+    },
+    "cost": {
+      "value": "10000",
+      "unit": "$"
+    },
+    "quantity": 1,
+    "releaseDate": null
+  }
+]
